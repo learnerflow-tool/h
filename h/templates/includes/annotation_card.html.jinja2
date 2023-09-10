@@ -1,0 +1,84 @@
+{#
+  Annotation card component.
+
+  Render an annotation card which has a username, timestamp,
+  an annotation quote, description and a list of tags.
+
+  Usage:
+    {{ annotation_card(presented_annotation, request, tag_link) }}
+
+  :param presented_annotation: The annotation object which includes all the fields to display.
+  :param request: The request param containing the route_url method.
+  :param tag_link: Method which generates a link for a given tag.
+#}
+
+{% macro annotation_card(presented_annotation, request, tag_link) -%}
+<li class="annotation-card">
+  <div class="annotation-card__header">
+    <div class="annotation-card__username-timestamp">
+      <a title="username" href="{{ request.route_url('activity.user_search', username=presented_annotation.annotation.username) }}"
+        class="annotation-card__username">
+        {{ presented_annotation.annotation.username }}
+      </a>
+      <a title="date"
+         {% if presented_annotation.html_link %}href="{{ presented_annotation.html_link }}"{% endif %}
+         class="annotation-card__timestamp">
+        {{ presented_annotation.annotation.updated.strftime('%d %b %Y') }}
+      </a>
+    </div>
+    <div class="annotation-card__share-info">
+      {% if presented_annotation.group %}
+        <a title="group" href="{{ request.route_url('group_read', pubid=presented_annotation.group.pubid, slug=presented_annotation.group.slug) }}"
+          class="annotation-card__groupname">
+            in
+            {{ svg_icon('groups', 'annotation-card__groups-icon') }}
+            {{ presented_annotation.group.name }}
+        </a>
+      {% endif %}
+      {% if not presented_annotation.annotation.shared %}
+        <span class="annotation-card__is-private"
+              title="{% trans %}This annotation is visible only to you.{% endtrans %}">
+          {{ svg_icon('lock', 'annotation-card__is-private-icon') }}
+          {% if not presented_annotation.group %}
+            {% trans %}Only me{% endtrans %}
+          {% endif %}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+  {% if presented_annotation.annotation.quote %}
+    <blockquote title="Annotation quote" class="annotation-card__quote">
+      {{ presented_annotation.annotation.quote }}
+    </blockquote>
+  {% endif %}
+  <div class="annotation-card__text">
+    {{ presented_annotation.annotation.text_rendered }}
+  </div>
+  <div title="Tags" class="annotation-card__tags">
+    {% for tag in presented_annotation.annotation.tags%}
+      <a class="annotation-card__tag" href="{{ tag_link(tag) }}">
+        {{ tag }}
+      </a>
+    {% endfor %}
+  </div>
+  <footer class="annotation-card__footer">
+    {% if presented_annotation.incontext_link %}
+      <a href="{{ presented_annotation.incontext_link }}"
+         rel="nofollow noopener"
+         target="_blank" title="{% trans %}Visit annotation in context{% endtrans %}">
+        {{ svg_icon('up-right-arrow', 'annotation-card__footer-link annotation-card__incontext-link') }}
+      </a>
+      <a href="#"
+        title="{% trans %}Share this annotation{% endtrans %}"
+        aria-haspopup="true"
+        share-widget-config='{
+          "url": "{{presented_annotation.incontext_link}}",
+          "private": {%if not presented_annotation.annotation.shared %}true{%else%}false{%endif%},
+          "group": {%if presented_annotation.group %}true{%else%}false{%endif%}
+        }'>
+        {{ svg_icon('share', 'annotation-card__footer-link') }}
+      </a>
+    {% endif %}
+  </footer>
+</li>
+{%- endmacro %}

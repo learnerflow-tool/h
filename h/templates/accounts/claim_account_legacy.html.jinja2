@@ -1,0 +1,16 @@
+{% extends "h:templates/layouts/base.html.jinja2" %}
+
+{% block page_title %}Claim account{% endblock page_title %}
+
+{% block content %}
+  {% include "h:templates/includes/logo-header.html.jinja2" %}
+  <div class="form-container">
+    <h1 class="form-header">Claim account</h1>
+    <p>
+      Sorry, your claim link has expired. If you still wish to claim a username
+      you reserved, please contact us at
+      <a href="mailto:support@hypothes.is?Subject=Claim%20my%20username">
+        support@hypothes.is</a>.
+  </div>
+{% endblock content %}
+

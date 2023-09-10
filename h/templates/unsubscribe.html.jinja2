@@ -1,0 +1,16 @@
+{% extends "layouts/base.html.jinja2" %}
+
+{% block title %}Unsubscribed{% endblock %}
+
+{% block content %}
+  {% include 'h:templates/includes/logo-header.html.jinja2' %}
+  <div class="form-container">
+    <h1 class="form-header">Your unsubscribe request has been processed.</h1>
+    <p>You should no longer receive further notifications of this type.</p>
+    <p>
+      If you have made a mistake and wish to resubscribe, please see your
+      <a href="{{request.route_path('login', _query={'next': request.route_path('account_notifications')})}}"
+        >notification settings</a>.
+    </p>
+  </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+<form id="{{ field.formid }}"
+      {%- if field.action %}
+      action="{{ field.action }}"
+      {%- endif %}
+      method="{{ field.method }}"
+      enctype="multipart/form-data"
+      accept-charset="utf-8"
+      class="form {{ field.css_class or '' }}
+             {%- if field.use_inline_editing %} js-form {% endif %}">
+  <input type="hidden" name="__formid__" value="{{ field.formid }}" />
+
+  <div class="form__backdrop" data-ref="formBackdrop"></div>
+
+  {%- for f in field.children -%}
+    {{ field.renderer(field.widget.item_template, field=f, cstruct=cstruct.get(f.name, null)) }}
+  {% endfor -%}
+
+  {% if field.footer %}
+  <div class="form-presubmit-footer">
+    <span>{{ field.footer | safe }}</span>
+  </div>
+  {% endif %}
+
+  <div class="form-actions {% if field.use_inline_editing %} is-hidden-when-loading {% endif %}"
+       data-ref="formActions">
+    <div class="form__submit-error" data-ref="formSubmitError">
+      <span>{% trans %}Unable to save changes: {% endtrans %}</span>
+      <span data-ref="formSubmitErrorMessage"></span>
+    </div>
+    {% if field.use_inline_editing %}
+    <button type="button"
+            class="btn btn--cancel is-hidden" data-ref="cancelBtn">Cancel</button>
+    {% endif %}
+    {% if field.show_cancel_button %}
+    <button type="button"
+            class="btn btn--cancel js-form-cancel">Cancel</button>
+    {% endif %}
+    <div class="u-stretch"></div>
+    <div class="form-actions__buttons">
+      {%- for button in field.buttons -%}
+        <button id="{{ field.formid + button.name }}"
+                name="{{ button.name }}"
+                type="{{ button.type }}"
+                class="form-actions__btn btn{% if button.css_class %} {{ button.css_class }}{% endif %}"
+                value="{{ _(button.value) }}"
+                {%- if button.disabled -%}
+                disabled="disabled"
+                {% endif -%}
+                >
+        {{ _(button.title) }}
+        </button>
+      {% endfor -%}
+    </div>
+  </div>
+
+  {#
+    The default deform templates are ajax capable. I've removed that code here
+    for the sake of clarity. If we need to put it back it can be found in
+    deform_jinja2:bootstrap_templates/form.jinja2.
+  #}
+</form>

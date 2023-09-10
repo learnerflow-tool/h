@@ -1,0 +1,36 @@
+@import 'partials/base';
+@import 'partials/util';
+
+// Components
+@import 'partials/admin-navbar';
+@import 'partials/btn';
+@import 'partials/form-actions';
+@import 'partials/form-checkbox';
+@import 'partials/form-container';
+@import 'partials/form-input';
+@import 'partials/form';
+@import 'partials/list-input';
+@import 'partials/search-form';
+@import 'partials/svg-icon';
+@import 'partials/tooltip';
+
+.flashbar {
+  margin-top: 20px;
+}
+
+.table-auto {
+  table-layout: auto;
+  width: auto;
+}
+
+.users-activate-form {
+  display: inline;
+}
+
+.pager .pager__item--more {
+  border: none;
+}
+
+.form-input__error-list {
+  list-style-type: none;
+}

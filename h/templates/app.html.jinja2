@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Hypothesis</title>
+    {# the <base> tag is required by Angular JS when HTML 5 history is
+     enabled. We shouldn't really need this because a given instance of the app
+     only ever displays a single route.
+     #}
+    <base target="_top" href="/" />
+    {% for attrs in meta_attrs -%}
+      <meta {% for key, value in attrs.items() %}{{ key }}="{{ value }}" {% endfor %}/>
+    {% endfor -%}
+    {% if link_tags %}
+      {% for link in link_tags %}
+        <link rel="{{ link.rel }}" type="{{ link.type }}"
+              href="{{ link.href }}"/>
+      {% endfor %}
+    {% endif %}
+  </head>
+  <body>
+    <hypothesis-app></hypothesis-app>
+
+    {# The `js-hypothesis-settings` class should be removed once
+       https://github.com/hypothesis/client/pull/243 is released.
+     #}
+    <!-- App Configuration !-->
+    <script class="js-hypothesis-config js-hypothesis-settings" type="application/json">
+      {{ app_config | safe }}
+    </script>
+
+    <!-- Client boot script !-->
+    <script src="{{ embed_url }}"></script>
+
+  </body>
+</html>

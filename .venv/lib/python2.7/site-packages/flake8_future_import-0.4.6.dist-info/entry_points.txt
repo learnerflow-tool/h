@@ -1,0 +1,3 @@
+[flake8.extension]
+flake8-future-import = flake8_future_import:FutureImportChecker
+

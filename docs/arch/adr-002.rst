@@ -1,0 +1,89 @@
+ADR 2: Service layer for testable business logic
+================================================
+
+Context
+-------
+
+As we are currently using it, Pyramid is a model-view-template (MVT) web
+application framework. Models describe domain objects and manage their
+persistence, views handle HTTP requests, and templates define the user
+interface.
+
+"Business logic" is a shorthand for the heart of what the application actually
+does. It is the code that manages the interactions of our domain objects, rather
+than code that handles generic concerns such as HTTP request handling or SQL
+generation.
+
+It is not always clear where to put "business logic" in an MVT application:
+
+- Some logic can live with its associated domain object(s) in the models layer,
+  but this quickly gets complicated when dealing with multiple models from
+  different parts of the system. It is easy to create circular import
+  dependencies.
+
+- Putting logic in the views typically makes them extremely hard to test, as
+  this makes a single component responsible for receiving and validating data
+  from the client, performing business logic operations, and preparing response
+  data.
+
+There are other problems associated with encapsulating business logic in views.
+Business logic typically interacts directly with the model layer. This means
+that either a) all view tests (including those which don't test business logic)
+need a database, or b) we stub out the models layer for some or all view tests.
+Stubbing out the database layer in a way that doesn't couple tests to the view
+implementation is exceedingly difficult, in part due to the large interface of
+SQLAlchemy.
+
+One way to resolve this problem is to introduce a "services layer" between views
+and the rest of the application, which is intended to encapsulate the bulk of
+application business logic and hide persistence concerns from the views.
+
+`This blog post`_ by `Nando Farestan`_ may help provide additional background
+on the motivation for a "services layer."
+
+.. _This blog post: http://nando.oui.com.br/2014/04/01/large_apps_with_sqlalchemy__architecture.html
+.. _Nando Farestan: http://nando.oui.com.br/index.html
+
+Decision
+--------
+
+We will employ a "services layer" to encapsulate business logic that satifies
+one or both of the following conditions:
+
+1. The logic is of "non-trivial" complexity. This is clearly open to
+   interpretation. As a rule of thumb: if you have to ask yourself the question
+   "is this trivial" then it is probably not.
+
+2. The business logic handles more than one type of domain objects.
+
+The services layer will be tested independently of views, and used from both
+views and other parts of the application which have access to a request object.
+
+Services will take the form of instances with some defined interface which are
+associated with a request and can be retrieved from the request object.
+
+Status
+------
+
+Accepted.
+
+Consequences
+------------
+
+We hope that adding a services layer will substantially simplify the process of
+writing and, in particular, testing view code.
+
+Views tests will likely be able to run faster, as they can be unit tested
+against a stubbed service, rather than having to hit the database.
+
+We will no longer need to stub or mock SQLAlchemy interfaces for testing, thus
+reducing the extent to which tests are coupled to the implementation of the
+system under test.
+
+To achieve these things we are introducing additional concepts ("service",
+"service factory") the purpose of which may not be immediately apparent,
+especially to programmers new to the codebase.
+
+There will likely be non-service-based views code in the codebase for some time,
+thus we are potentially introducing inconsistency between different parts of the
+code.

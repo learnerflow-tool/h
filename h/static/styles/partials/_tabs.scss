@@ -1,0 +1,28 @@
+.tabs__link {
+  color: inherit;
+}
+
+.tabs__item {
+  display: inline;
+  color: $grey-4;
+  font-size: $title-font-size;
+
+  &:not(:last-of-type)::after {
+    content: " / ";
+  }
+
+  .is-active {
+    color: $grey-6;
+  }
+}
+
+.tabs {
+  margin-top: 55px;
+  padding-bottom: 30px;
+}
+
+@media screen and (max-width: $max-phone-width) {
+  .tabs__item {
+    font-size: $input-font-size;
+  }
+}

@@ -1,0 +1,3 @@
+#!/Users/ssin122/PhDProject/h/.venv/bin/python
+from requirements_detector.run import run
+run()
