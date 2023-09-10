@@ -14,7 +14,7 @@ We included provision to manage and store data pertaining to the following enhan
 
 4. **Course Metadata**: Our customized databased includes enhancements to store information such as:
  - Course Information : offering dates (start/end), Campus, number of assessments
- - Assessment & Student Demographics Infomation: THis can either be imported into the database or handled within just the dashboard  boweser through csv import
+ - Assessment & Student Demographics Infomation: This can either be imported into the database or handled within just the dashboard  boweser through csv import
 
 
 Feel free to explore these enhancements and provide feedback on their functionality.
